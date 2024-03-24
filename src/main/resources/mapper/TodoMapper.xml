@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kitri.miniproject_todolist.mappers.TodoMapper">
+
+    <sql id="requestColumns">
+        content, done
+    </sql>
+
+    <sql id="responseColumns">
+        id, content, done, created_at as createdAt, modified_at as modifiedAt, member_id as memberId
+    </sql>
+
+    <resultMap id="todoResultMap" type="com.kitri.miniproject_todolist.dto.ResponseTodo">
+        <id property="id" column="id" />
+        <result property="content" column="content" />
+        <result property="done" column="done" />
+        <result property="createdAt" column="created_at" />
+        <result property="modifiedAt" column="modified_at" />
+        <result property="memberId" column="member_id" />
+    </resultMap>
+
+    <select id="findAll" resultType="com.kitri.miniproject_todolist.dto.ResponseTodo">
+        SELECT <include refid="responseColumns" /> FROM todos
+    </select>
+
+    <insert id="save" parameterType="com.kitri.miniproject_todolist.dto.RequestTodo">
+        INSERT INTO todos (content, done, member_id) VALUES (#{content}, #{done}, #{memberId})
+    </insert>
+
+    <select id="findById" parameterType="Long" resultType="com.kitri.miniproject_todolist.dto.ResponseTodo">
+        SELECT
+            <include refid="responseColumns" />
+            FROM todos WHERE id = #{value}
+    </select>
+
+    <update id="update" parameterType="com.kitri.miniproject_todolist.dto.RequestTodo">
+        UPDATE todos
+        SET done = !done
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM todos WHERE id = #{id}
+    </delete>
+
+    <select id="findMember" resultType="com.kitri.miniproject_todolist.dto.SignUpMember">
+        SELECT * FROM member
+    </select>
+
+    <insert id="signup" parameterType="com.kitri.miniproject_todolist.dto.SignUpMember">
+        INSERT INTO member (email, name, password) VALUES (#{email}, #{name}, #{password})
+    </insert>
+
+
+</mapper>
+
